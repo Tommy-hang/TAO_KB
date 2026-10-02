@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NoteCard from '../components/NoteCard.astro';
+import { publishedNotes } from '../lib/notes';
+export async function getStaticPaths() {
+  return (await getCollection('pages')).map((p) => ({
+    params: { page: p.id },
+    props: { page: p },
+  }));
+}
+const { page } = Astro.props;
+const { Content } = await render(page);
+const notes = await publishedNotes();
+const order = ['BV1nW421N7KA', 'BV1oV4y1p7rH', 'BV1NM4m1f7HL', 'BV1Z8mdY2Erj'];
+---
+
+<BaseLayout title={page.data.title} description={page.data.description}>
+  <header class="page-intro">
+    <p class="eyebrow">TAO Knowledge / {page.id.replace('-', ' ')}</p>
+    <h1>{page.data.title}</h1>
+    <p>{page.data.description}</p>
+  </header>
+  <div class="document-page prose">
+    <Content />
+  </div>
+  {page.id === 'start-here' && (
+    <section class="section">
+      <div class="section-head">
+        <h2>开始阅读</h2>
+      </div>
+      {order
+        .map((id) => notes.find((n) => n.id === id))
+        .filter(Boolean)
+        .map((n, i) => (
+          <NoteCard note={n!} index={i} />
+        ))}
+    </section>
+  )}
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import NoteLayout from '../../layouts/NoteLayout.astro';
+import { publishedNotes } from '../../lib/notes';
+export async function getStaticPaths() {
+  return (await publishedNotes()).map((note) => ({
+    params: { bvid: note.data.source_bvid },
+    props: { note },
+  }));
+}
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+---
+
+<NoteLayout note={note} headings={headings}>
+  <Content />
+</NoteLayout>

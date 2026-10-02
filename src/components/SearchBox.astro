@@ -1,0 +1,20 @@
+---
+import { withBase } from '../lib/paths';
+---
+
+<form action={withBase('search/')} method="get" class="search-form" role="search">
+  <span aria-hidden="true">⌕</span>
+  <label class="sr-only" for="knowledge-query">
+    搜索知识库
+  </label>
+  <input
+    id="knowledge-query"
+    name="q"
+    type="search"
+    placeholder="搜索一个问题、概念、观点或视频……"
+    required
+  />
+  <button type="submit">
+    搜索 <span aria-hidden="true">↗</span>
+  </button>
+</form>

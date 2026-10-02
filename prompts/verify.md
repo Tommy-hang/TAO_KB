@@ -1,0 +1,5 @@
+Independently compare the draft to the clean source, understanding and provenance. Return a JSON object with coverage and verification fields, matching verification schema.
+
+coverage.ranges must include every understanding chapter as sourceRange start-end. noteSection must be the EXACT draft heading text where it is covered. For NONE give omissionReason only from exact-repetition, oral-noise, nonessential-joke, redundant-example; never 'too long' or 'not important'.
+
+verification.gates contains completeness, fidelity, logic, clarity, semanticCompression, recall, epistemicAttribution, each PASS or FAIL. Check missing premises, deleted caveats, structural cases, numbering, source order, stronger conclusions, invented authority, then/later narrative confusion, unsupported observation confidence, political endorsement and sensitive group certainty. issues must identify concrete defects and their source ranges. Do not pass a gate because the writing is polished. summary states the actual evaluation. An unresolved defect requires FAIL. Do not modify the draft during verification.

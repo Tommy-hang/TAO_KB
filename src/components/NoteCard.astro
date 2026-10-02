@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { notePath } from '../lib/paths';
+import { recallExcerpt } from '../lib/notes';
+interface Props {
+  note: CollectionEntry<'notes'>;
+  index?: number;
+  headingLevel?: 2 | 3;
+}
+const { note, index = 0, headingLevel = 3 } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+---
+
+<article
+  class="note-row"
+  data-note
+  data-topics={JSON.stringify(note.data.topics)}
+  data-tags={JSON.stringify(note.data.tags)}
+>
+  <span class="ordinal" aria-hidden="true">
+    {String(index + 1).padStart(2, '0')}
+  </span>
+  <div>
+    <p class="topics">
+      {note.data.topics.join(' / ')}
+      {note.data.featured && <span class="featured-label">精选</span>}
+    </p>
+    <Heading>
+      <a href={notePath(note.data.source_bvid)}>{note.data.title}</a>
+    </Heading>
+    <p class="excerpt">{recallExcerpt(note.body)}</p>
+  </div>
+  <p class="meta">
+    <time datetime={note.data.source_date}>{note.data.source_date}</time>
+    <span>30s · 3min · 全文</span>
+  </p>
+</article>

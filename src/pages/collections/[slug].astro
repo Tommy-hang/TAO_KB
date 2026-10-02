@@ -1,0 +1,35 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import { publishedCollections, publishedNotes } from '../../lib/notes';
+export async function getStaticPaths() {
+  return (await publishedCollections()).map((c) => ({
+    params: { slug: c.data.slug },
+    props: { collection: c },
+  }));
+}
+const { collection } = Astro.props;
+const { Content } = await render(collection);
+const notes = await publishedNotes();
+const ordered = collection.data.notes.map((id) => notes.find((n) => n.data.source_bvid === id)!);
+---
+
+<BaseLayout title={collection.data.title} description={collection.data.summary}>
+  <header class="page-intro">
+    <p class="eyebrow">Reading collection / {ordered.length} notes</p>
+    <h1>{collection.data.title}</h1>
+    <p>{collection.data.summary}</p>
+  </header>
+  <div class="prose collection-intro">
+    <Content />
+  </div>
+  <section class="section">
+    <div class="section-head">
+      <h2>按这个顺序阅读</h2>
+    </div>
+    {ordered.map((n, i) => (
+      <NoteCard note={n} index={i} />
+    ))}
+  </section>
+</BaseLayout>

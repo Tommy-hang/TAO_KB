@@ -1,0 +1,142 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import NoteCard from '../components/NoteCard.astro';
+import { withBase, topicPath } from '../lib/paths';
+import { relatedNotes } from '../lib/notes';
+interface Props {
+  note: CollectionEntry<'notes'>;
+  headings: MarkdownHeading[];
+}
+const { note, headings } = Astro.props;
+const n = note.data;
+const fullIndex = headings.findIndex((h) => h.depth === 2 && h.text === 'Full Knowledge Note');
+const endIndex = headings.findIndex((h, i) => i > fullIndex && h.depth === 2);
+const toc = headings
+  .slice(fullIndex + 1, endIndex === -1 ? undefined : endIndex)
+  .filter((h) => h.depth === 3);
+const jumps = [
+  ['30-Second Recall', '30s', '恢复记忆'],
+  ['3-Minute Overview', '3min', '重建框架'],
+  ['Full Knowledge Note', 'Full', '完整阅读'],
+].map(([text, label, hint]) => ({
+  label,
+  hint,
+  slug: headings.find((h) => h.text === text)?.slug,
+}));
+const related = await relatedNotes(note.id);
+---
+
+<BaseLayout title={n.title}>
+  <article data-pagefind-body>
+    <header class="note-header">
+      <div class="breadcrumb" data-pagefind-ignore>
+        <a href={withBase()}>首页</a>
+        <span>/</span>
+        <a href={withBase('library/')}>全部笔记</a>
+        <span>/</span>
+        <span>知识长文</span>
+      </div>
+      <p class="eyebrow" data-pagefind-ignore>
+        Knowledge note / {n.source_bvid}
+      </p>
+      <h1 data-pagefind-meta="title">{n.title}</h1>
+      <div class="note-metadata" data-pagefind-ignore>
+        <span>{n.source_author}</span>
+        <time datetime={n.source_date} data-pagefind-meta="date">
+          {n.source_date}
+        </time>
+        <a href={n.source_url} target="_blank" rel="noopener noreferrer">
+          观看原视频 ↗
+        </a>
+        <span>笔记 v{n.note_version}</span>
+      </div>
+      <div class="topic-list">
+        {n.topics.map((t) => (
+          <a class="topic-chip" href={topicPath(t)}>
+            {t}
+          </a>
+        ))}
+      </div>
+      <div class="tags">
+        {n.tags.map((t) => (
+          <a href={withBase(`library/?tag=${encodeURIComponent(t)}`)}>#{t}</a>
+        ))}
+      </div>
+      <span class="sr-only" data-pagefind-meta="topics">
+        {n.topics.join(' · ')}
+      </span>
+      <span class="sr-only" data-pagefind-meta="tags">
+        {n.tags.join(' · ')}
+      </span>
+    </header>
+    <nav class="reading-jump" aria-label="分层阅读跳转" data-pagefind-ignore>
+      <span class="label">选择你的阅读时间</span>
+      {jumps.map((j) => (
+        <a href={`#${j.slug}`}>
+          <b>{j.label}</b>
+          {j.hint}
+        </a>
+      ))}
+    </nav>
+    <div class="reading-layout">
+      <div class="prose">
+        <slot />
+      </div>
+      {toc.length > 0 && (
+        <aside class="toc" aria-label="完整长文目录" data-pagefind-ignore>
+          <p>全文目录 / CONTENTS</p>
+          <nav>
+            {toc.map((h) => (
+              <a href={`#${h.slug}`}>
+                {h.text
+                  .replace(/`[^`]*`/g, '')
+                  .replace(/\d{2}:\d{2}[–-]\d{2}:\d{2}/g, '')
+                  .trim()}
+              </a>
+            ))}
+          </nav>
+        </aside>
+      )}
+    </div>
+  </article>
+  <div class="article-bottom" data-pagefind-ignore>
+    <a class="back-top" href="#main">
+      回到顶部 ↑
+    </a>
+    {related.length > 0 && (
+      <section class="section">
+        <div class="section-head">
+          <h2>
+            继续理解 <small>RELATED NOTES</small>
+          </h2>
+        </div>
+        {related.map((r, i) => (
+          <NoteCard note={r} index={i} />
+        ))}
+      </section>
+    )}
+  </div>
+</BaseLayout>
+<script>
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+  if (links.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            links.forEach((a) =>
+              a.setAttribute('aria-current', String(a.hash.slice(1) === e.target.id)),
+            );
+          }
+        }
+      },
+      { rootMargin: '0px 0px -65% 0px' },
+    );
+    links.forEach((a) => {
+      const el = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      if (el) observer.observe(el);
+    });
+  }
+</script>

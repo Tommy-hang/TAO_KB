@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionCard from '../../components/CollectionCard.astro';
+import { publishedCollections } from '../../lib/notes';
+const collections = await publishedCollections();
+---
+
+<BaseLayout title="阅读专题">
+  <header class="page-intro">
+    <p class="eyebrow">Reading collections</p>
+    <h1>几篇长文，一条阅读路线。</h1>
+    <p>人工选择内容与顺序，把有关联的问题放在一起，慢慢理解。</p>
+  </header>
+  <section class="section collection-grid">
+    {collections.map((c, i) => (
+      <CollectionCard collection={c} index={i} headingLevel={2} />
+    ))}
+  </section>
+</BaseLayout>

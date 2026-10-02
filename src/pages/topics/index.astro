@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { topicGroups } from '../../lib/notes';
+import { topicPath } from '../../lib/paths';
+const topics = await topicGroups();
+---
+
+<BaseLayout title="主题">
+  <header class="page-intro">
+    <p class="eyebrow">Explore by topic</p>
+    <h1>从一个主题，继续往下读。</h1>
+    <p>主题来自笔记本身，随知识库自然积累。</p>
+  </header>
+  <section class="section topic-list">
+    {topics.map((t) => (
+      <a class="topic-chip" href={topicPath(t.title)}>
+        {t.title}
+        <small>{t.notes.length} 篇</small>
+      </a>
+    ))}
+  </section>
+</BaseLayout>

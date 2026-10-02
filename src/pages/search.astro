@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title="搜索">
+  <header class="page-intro">
+    <p class="eyebrow">Find a thought</p>
+    <h1>找回那个模糊记得的观点。</h1>
+    <p>搜索一个问题、概念、观点或视频。结果来自已收录笔记的完整正文。</p>
+  </header>
+  <div id="search-results" data-base={withBase()}></div>
+  <p id="search-status" class="search-help" role="status">
+    正在准备全文搜索……
+  </p>
+  <div class="search-help">
+    试着搜索：
+    {['成长', '判断', '恋爱', '利益', '衣服'].map((q) => (
+      <a href={withBase(`search/?q=${encodeURIComponent(q)}`)}>{q}</a>
+    ))}
+  </div>
+  <noscript>
+    <p class="no-script">
+      全文搜索需要 JavaScript。也可以
+      <a class="text-link" href={withBase('library/')}>
+        浏览全部笔记
+      </a>
+      。
+    </p>
+  </noscript>
+</BaseLayout>
+<script>
+  const host = document.querySelector<HTMLElement>('#search-results')!;
+  const base = host.dataset.base!;
+  const status = document.querySelector<HTMLElement>('#search-status')!;
+  async function loadSearch() {
+    try {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = `${base}pagefind/pagefind-ui.css`;
+      document.head.append(css);
+      await new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `${base}pagefind/pagefind-ui.js`;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('index unavailable'));
+        document.head.append(script);
+      });
+      const UI = (
+        window as unknown as {
+          PagefindUI: new (options: Record<string, unknown>) => {
+            triggerSearch: (q: string) => void;
+          };
+        }
+      ).PagefindUI;
+      const ui = new UI({
+        element: '#search-results',
+        bundlePath: `${base}pagefind/`,
+        baseUrl: base,
+        showSubResults: false,
+        showImages: false,
+        resetStyles: false,
+        translations: {
+          placeholder: '搜索一个问题、概念、观点或视频……',
+          zero_results: '没有找到 “[SEARCH_TERM]”。试试更简短的概念。',
+          searching: '正在搜索…',
+          clear_search: '清空',
+          load_more: '查看更多',
+          search_label: '搜索知识库',
+          many_results: '找到 [COUNT] 个结果',
+          one_result: '找到 1 个结果',
+        },
+        processResult: (result: { meta: Record<string, string> }) => {
+          result.meta = {
+            title: result.meta.title,
+            主题: result.meta.topics || '',
+            标签: result.meta.tags || '',
+            原视频发布: result.meta.date || '',
+          };
+          return result;
+        },
+      });
+      status.hidden = true;
+      const q = new URLSearchParams(location.search).get('q');
+      if (q) ui.triggerSearch(q);
+      host.addEventListener('input', () => {
+        const input = host.querySelector<HTMLInputElement>('input[type=search]');
+        const p = new URLSearchParams();
+        if (input?.value) p.set('q', input.value);
+        history.replaceState(null, '', `${location.pathname}${p.size ? '?' + p : ''}`);
+      });
+    } catch {
+      status.textContent =
+        '搜索索引尚未生成。请先运行 npm run build，再用 npm run preview 打开生产预览。';
+    }
+  }
+  loadSearch();
+</script>

@@ -1,0 +1,1 @@
+Repair ONLY defects identified by the supplied QA and verification. Preserve every unaffected paragraph, source logic, attribution and chapter structure. Do not rewrite the entire note or add new arguments. Return the complete updated draft.md with valid front matter. Keep status draft. After repair, verification must run again; never declare passed or published yourself.

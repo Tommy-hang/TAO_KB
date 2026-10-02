@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+workspace/
+src/content/
+Tao_*.md
+TAO_*.md
+docs/TAO_KB_IMPLEMENTATION_GUIDE.md
+docs/PIPELINE_STRESS_TEST.md

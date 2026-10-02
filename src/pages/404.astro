@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title="页面未找到">
+  <section class="page-intro">
+    <p class="eyebrow">404</p>
+    <h1>这页暂时不在书架上。</h1>
+    <p>可以回到笔记目录，或搜索你记得的问题。</p>
+    <a class="text-link" href={withBase('library/')}>
+      回到全部笔记 ↗
+    </a>
+  </section>
+</BaseLayout>

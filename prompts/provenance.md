@@ -1,0 +1,3 @@
+Using the source transcript and understanding.json, return provenance.json matching its schema. Map every major claim to its sourceRange and one of: direct-observation, personal-experience, author-inference, external-factual-claim, normative-value-claim.
+
+Personal experience, inference, external claims and value judgments require explicit attribution (requiresAttribution true). externalFactCheck must be false; no external research is being performed in this compiler. Be especially careful around psychological certainty, group generalization, political causal explanations, and retrospective narrative interpretations.

@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import { withBase } from '../lib/paths';
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = '保存思想，重新理解',
+  description = '从精选视频出发，保存完整思想。一个安静、可复习、可检索的长文知识库。',
+} = Astro.props;
+const current = Astro.url.pathname;
+const navigation = [
+  ['library/', '全部笔记'],
+  ['topics/', '主题'],
+  ['collections/', '阅读专题'],
+  ['start-here/', '从这里开始'],
+];
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title} · TAO Knowledge</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f6f2" />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      跳到主要内容
+    </a>
+    <header class="site-header" data-pagefind-ignore>
+      <a class="brand" href={withBase()} aria-label="TAO Knowledge 首页">
+        <span class="brand-mark">T.</span>
+        <span>
+          TAO <b>KNOWLEDGE</b>
+          <small>精选视频 · 长文知识库</small>
+        </span>
+      </a>
+      <nav aria-label="主导航">
+        {navigation.map(([p, label]) => (
+          <a href={withBase(p)} aria-current={current.startsWith(withBase(p)) ? 'page' : undefined}>
+            {label}
+          </a>
+        ))}
+        <a class="nav-search" href={withBase('search/')} aria-label="搜索知识库">
+          搜索 <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer" data-pagefind-ignore>
+      <div>
+        <strong>TAO KNOWLEDGE</strong>
+        <p>Preserve the thought. Simplify the system.</p>
+      </div>
+      <div>
+        <a href={withBase('methodology/')}>整理方法</a>
+        <a href={withBase('about/')}>关于知识库</a>
+        <span>认真保存，常常重读。</span>
+      </div>
+    </footer>
+  </body>
+</html>

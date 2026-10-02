@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/paths';
+interface Props {
+  collection: CollectionEntry<'collections'>;
+  index?: number;
+  headingLevel?: 2 | 3;
+}
+const { collection, index = 0, headingLevel = 3 } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+---
+
+<a class="collection-card" href={withBase(`collections/${collection.data.slug}/`)}>
+  <span class="ordinal">COLLECTION {String(index + 1).padStart(2, '0')}</span>
+  <Heading>{collection.data.title}</Heading>
+  <p>{collection.data.summary}</p>
+  <div class="bottom">
+    <span>{collection.data.notes.length} 篇笔记 · 按顺序阅读</span>
+    <span aria-hidden="true">↗</span>
+  </div>
+</a>

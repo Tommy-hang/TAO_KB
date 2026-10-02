@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import { topicGroups } from '../../lib/notes';
+export async function getStaticPaths() {
+  return (await topicGroups()).map((t) => ({ params: { topic: t.title }, props: { topic: t } }));
+}
+const { topic } = Astro.props;
+---
+
+<BaseLayout title={topic.title}>
+  <header class="page-intro">
+    <p class="eyebrow">Topic / {topic.notes.length} notes</p>
+    <h1>{topic.title}</h1>
+    <p>从不同的问题和经历中，重新理解同一个主题。</p>
+  </header>
+  <section class="section">
+    {topic.notes.map((n, i) => (
+      <NoteCard note={n} index={i} headingLevel={2} />
+    ))}
+  </section>
+</BaseLayout>

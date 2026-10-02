@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBox from '../components/SearchBox.astro';
+import NoteCard from '../components/NoteCard.astro';
+import CollectionCard from '../components/CollectionCard.astro';
+import { publishedNotes, topicGroups, publishedCollections } from '../lib/notes';
+import { withBase, topicPath } from '../lib/paths';
+const notes = await publishedNotes();
+const topics = await topicGroups();
+const collections = await publishedCollections();
+const latest = [...notes].sort(
+  (a, b) => b.data.created_at.localeCompare(a.data.created_at) || a.id.localeCompare(b.id),
+);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div>
+      <p class="eyebrow">A personal archive of thought</p>
+      <h1>
+        保存思想。
+        <br />
+        <em>重新理解。</em>
+      </h1>
+      <p>
+        有些视频，值得在几个月后重新打开。
+        <br />
+        这里把它们整理成完整的长文，让思想有迹可循，
+        <br />
+        让每一次重读，都能回到问题的深处。
+      </p>
+    </div>
+    <div class="hero-aside">
+      <div>
+        <span class="number">{String(notes.length).padStart(2, '0')}</span>
+        <p>
+          篇长文，持续积累。
+          <br />
+          一条视频，一篇完整笔记。
+        </p>
+      </div>
+      <div class="reading-scale">
+        <span>
+          <b>30s</b>恢复记忆
+        </span>
+        <span>
+          <b>3min</b>重建框架
+        </span>
+        <span>
+          <b>Full</b>完整理解
+        </span>
+      </div>
+    </div>
+  </section>
+  <SearchBox />
+  <section class="start-strip">
+    <div>
+      <h2>第一次来，从一个具体的问题开始。</h2>
+      <p>一份简短的阅读指南，和几条值得慢慢走的阅读路线。</p>
+    </div>
+    <a class="text-link" href={withBase('start-here/')}>
+      从这里开始 ↗
+    </a>
+  </section>
+  <section class="section">
+    <div class="section-head">
+      <h2>
+        沿着主题阅读 <small>TOPICS</small>
+      </h2>
+      <span class="eyebrow">{topics.length} 个主题</span>
+    </div>
+    <div class="topic-list">
+      {topics.map((t) => (
+        <a class="topic-chip" href={topicPath(t.title)}>
+          {t.title}
+          <small>{String(t.notes.length).padStart(2, '0')}</small>
+        </a>
+      ))}
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-head">
+      <h2>
+        把问题连起来 <small>READING COLLECTIONS</small>
+      </h2>
+      <a class="text-link" href={withBase('collections/')}>
+        全部专题 ↗
+      </a>
+    </div>
+    <div class="collection-grid">
+      {collections.map((c, i) => (
+        <CollectionCard collection={c} index={i} />
+      ))}
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-head">
+      <h2>
+        值得重读 <small>FEATURED NOTES</small>
+      </h2>
+      <a class="text-link" href={withBase('library/')}>
+        全部笔记 ↗
+      </a>
+    </div>
+    {notes
+      .filter((n) => n.data.featured)
+      .map((n, i) => (
+        <NoteCard note={n} index={i} />
+      ))}
+  </section>
+  <section class="section">
+    <div class="section-head">
+      <h2>
+        最近收录 <small>LATEST ADDED</small>
+      </h2>
+      <span class="eyebrow">慢慢积累，常常重读</span>
+    </div>
+    {latest.slice(0, 3).map((n, i) => (
+      <NoteCard note={n} index={i} />
+    ))}
+  </section>
+</BaseLayout>
