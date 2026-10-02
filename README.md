@@ -140,7 +140,7 @@ npm run publish -- BVxxxxxxxxxx --local
 
 ### 发布状态
 
-本批发布状态将在上传和 Actions 验收后记录于 [本批验收记录](docs/RELEASE_2026-10-02.md)。完整字幕、提示词包和审核中间文件不会随仓库上传；公开文章保留来源并以独立措辞整理。
+本批内容已上传 GitHub `main`，本地与远端提交 SHA 一致；[云端 CI](https://github.com/Tommy-hang/TAO_KB/actions/runs/36985846237) 已通过测试、内容校验、生产构建与站点检查。Pages 部署因私有仓库计划限制未启用。详情见 [本批验收记录](docs/RELEASE_2026-10-02.md)。完整字幕、提示词包和审核中间文件不会随仓库上传；公开文章保留来源并以独立措辞整理。
 
 工作流自动从仓库地址计算 `SITE_URL` 和 `BASE_PATH`，支持 `/<repo>/` 子路径，也支持 `<owner>.github.io` 根站。自定义域名可修改这两项环境配置，配合仓库 Pages 域名设置。不要将本地默认 localhost 地址当作线上 canonical。
 
