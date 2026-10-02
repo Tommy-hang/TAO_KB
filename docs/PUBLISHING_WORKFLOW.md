@@ -148,3 +148,7 @@ GitHub Pages 工作流已按项目仓库路径构建。启用 Pages 需实际账
 用简洁中文说明新增什么、当前数量、测试结果、提交 SHA、GitHub 与已验证站点链接，并链接本文件。列出任何尚未解决的真实阻碍。不要把本地预览当成云端上线，不把 GitHub push 当成 Pages 成功。
 
 以后用户只需提供字幕并说“按工作指导整理并发布”，Codex 就应按这个流程完成到已授权的最后一步。
+
+## 当前部署基线（2026-10-02）
+
+用户已明确授权将 Tommy-hang/TAO_KB 改为 public。GitHub Pages 使用 Actions 来源，PAGES_ENABLED=true，正式网址为 https://tommy-hang.github.io/TAO_KB/。已验证的部署运行见 https://github.com/Tommy-hang/TAO_KB/actions/runs/36986551166 。后续任务保持公开状态，推送 main 后等待对应提交的 build 与 deploy 成功，再验收线上内容；不再把此前私有仓库套餐限制当作当前阻碍。完整字幕与任务中间产物始终仅在本地 workspace。

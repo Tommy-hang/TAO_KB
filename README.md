@@ -6,7 +6,7 @@ Preserve the thought. Simplify the system.
 
 [GitHub 仓库](https://github.com/Tommy-hang/TAO_KB) · [字幕整理与发布工作指导](docs/PUBLISHING_WORKFLOW.md)
 
-目前收录 **8 篇笔记、3 个阅读专题**。最新更新：2026-10-02，新增 4 篇完整字幕整理，涵盖思考能力、成长体系、人性与文明。仓库可见性保留为 private；GitHub Pages 是否启用及部署结果见下方发布状态，不把仓库上传等同于网站上线。
+目前收录 **8 篇笔记、3 个阅读专题**。最新更新：2026-10-02，新增 4 篇完整字幕整理，涵盖思考能力、成长体系、人性与文明。经用户授权，仓库现为 public，GitHub Pages 已上线：[打开知识库](https://tommy-hang.github.io/TAO_KB/)。
 
 ## You only need three commands
 
@@ -136,11 +136,11 @@ npm run publish -- BVxxxxxxxxxx --local
 
 在账户计划支持的前提下，在仓库 **Settings → Pages → Source** 选择 **GitHub Actions**，再设置仓库 Actions 变量 `PAGES_ENABLED=true`。提交代码后，工作流先安装依赖、测试、验证、构建及检查内部链接，再上传静态产物并部署。未启用时继续运行内容与构建 CI，跳过部署。
 
-私有仓库需要账户计划支持 Pages，见 [GitHub 官方说明](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages)。2026-10-02 启用请求返回 `422: Your current plan does not support GitHub Pages for this repository.`，因此本批保留 private，网站未上线。不能为了部署擅自把仓库改成 public。计划站点路径为 `https://Tommy-hang.github.io/TAO_KB/`，只有部署和访问都通过后才标记为已上线。
+2026-10-02 经用户明确同意，将仓库改为 public，启用 GitHub Actions 来源并设置 `PAGES_ENABLED=true`。[知识库已上线](https://tommy-hang.github.io/TAO_KB/)，后续推送到 main 会自动验证、构建和部署。原始字幕与审核中间文件仍留在本地，不上传。未来代理应保持当前可见性；变更可见性或购买套餐需用户另行授权。
 
 ### 发布状态
 
-本批内容已上传 GitHub `main`，本地与远端提交 SHA 一致；[云端 CI](https://github.com/Tommy-hang/TAO_KB/actions/runs/36985846237) 已通过测试、内容校验、生产构建与站点检查。Pages 部署因私有仓库计划限制未启用。详情见 [本批验收记录](docs/RELEASE_2026-10-02.md)。完整字幕、提示词包和审核中间文件不会随仓库上传；公开文章保留来源并以独立措辞整理。
+本批内容已上传 GitHub `main`，本地与远端提交 SHA 一致；[云端 CI](https://github.com/Tommy-hang/TAO_KB/actions/runs/36985846237) 已通过测试、内容校验、生产构建与站点检查。随后在用户授权公开仓库后，[Pages 部署](https://github.com/Tommy-hang/TAO_KB/actions/runs/36986551166) 也已成功。详情见 [本批验收记录](docs/RELEASE_2026-10-02.md)。完整字幕、提示词包和审核中间文件不会随仓库上传；公开文章保留来源并以独立措辞整理。
 
 工作流自动从仓库地址计算 `SITE_URL` 和 `BASE_PATH`，支持 `/<repo>/` 子路径，也支持 `<owner>.github.io` 根站。自定义域名可修改这两项环境配置，配合仓库 Pages 域名设置。不要将本地默认 localhost 地址当作线上 canonical。
 
